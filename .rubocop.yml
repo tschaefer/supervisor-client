@@ -1,0 +1,37 @@
+---
+require:
+  - rubocop-rspec
+  - rubocop-rake
+
+AllCops:
+  NewCops: enable
+
+Style/NegatedIf:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/AbcSize:
+  CountRepeatedAttributes: false
+
+Metrics/MethodLength:
+  CountAsOne:
+    - 'array'
+    - 'hash'
+    - 'heredoc'
+  Max: 25
+
+RSpec/ExampleLength:
+  CountAsOne:
+    - 'array'
+    - 'hash'
+    - 'heredoc'
+  Max: 25
+
+RSpec/AnyInstance:
+  Enabled: false
+
+# aggregate_failures is set to true by default, see spec/spec_helper.rb:96
+RSpec/MultipleExpectations:
+  Enabled: false

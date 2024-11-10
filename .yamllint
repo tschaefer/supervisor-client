@@ -1,0 +1,7 @@
+---
+extends: default
+rules:
+  indentation:
+    indent-sequences: consistent
+
+# vim:ft=yaml
