@@ -237,6 +237,9 @@ _supervisor() {
 
     local actions="health stacks"
     local options='--help --man --version'
+    local options_config='--configuration-file'
+
+    options="${options} ${options_config}"
 
     local word
     for word in "${words[@]}"; do
@@ -254,6 +257,10 @@ _supervisor() {
 
     case "$prev" in
         --help|--man|--version)
+            return
+            ;;
+        --configuration-file)
+            _filedir
             return
             ;;
     esac
