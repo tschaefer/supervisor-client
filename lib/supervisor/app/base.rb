@@ -73,7 +73,8 @@ module Supervisor
       end
 
       def filter_secrets(hash)
-        filters = %i[key token passw secret]
+        secrets = /key|token|passw|secret/i
+        filters = [->(k, v) { v.replace('[FILTERED]') if secrets.match?(k) && v.present? }]
 
         ActiveSupport::ParameterFilter.new(filters).filter(hash)
       end
