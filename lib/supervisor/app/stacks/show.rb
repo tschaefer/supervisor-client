@@ -35,12 +35,14 @@ module Supervisor
         private
 
         def stringify(value)
-          value = value.join("\n") if value.is_a?(Array)
-          value = value.each_pair.map { |k, v| "#{k}=\"#{v}\"" }.join("\n") if value.is_a?(Hash)
-          value = value.to_s if value.is_a?(Numeric)
-          value = '-' if value.blank?
-
-          value
+          case value.class.name
+          when 'Hashie::Array'
+            value.join("\n")
+          when 'Hashie::Mash'
+            value.map { |k, v| "#{k}=#{v}" }.join("\n")
+          else
+            value.to_s
+          end
         end
 
         def truncate(value)
