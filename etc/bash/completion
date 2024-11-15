@@ -185,11 +185,31 @@ _supervisor_stack_control() {
     __supervisor_stacks_completion
 }
 
+_supervisor_stack_logs() {
+    local cur prev words
+    _get_comp_words_by_ref -n : cur prev words
+
+    local options='--help --json --follow'
+
+    case "$prev" in
+        --help|--json|--follow)
+            return
+            ;;
+    esac
+
+    if [[ "$cur" == -* ]]; then
+        mapfile -t COMPREPLY < <(compgen -W "$options" -- "$cur")
+        return
+    fi
+
+    __supervisor_stacks_completion
+}
+
 _supervisor_stacks() {
     local cur prev words
     _get_comp_words_by_ref -n : cur prev words
 
-    local actions="create delete list show stats update control"
+    local actions="create delete list show stats update control logs"
 
     local word
     for word in "${words[@]}"; do
@@ -220,6 +240,10 @@ _supervisor_stacks() {
                 ;;
             control)
                 _supervisor_stack_control
+                return
+                ;;
+            logs)
+                _supervisor_stack_logs
                 return
                 ;;
         esac

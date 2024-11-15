@@ -49,7 +49,7 @@ module Supervisor
           max_width = TTY::Screen.width - 20
 
           value.split("\n").map do |v|
-            v.length > max_width ? v.truncate(max_width) : v
+            v.truncate(max_width)
           end.join("\n")
         end
       end
