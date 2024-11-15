@@ -44,8 +44,14 @@ module Supervisor
         end
 
         def table(log)
+          max_width = TTY::Screen.width - 13
+
           rows = log.each_pair.filter_map do |key, value|
-            ["#{key.titleize.rjust(9)}:", value]
+            value = value.split("\n").map do |v|
+              v.length > max_width ? v.truncate(max_width) : v
+            end.join("\n")
+
+            ["#{key.titleize.rjust(10)}:", value]
           end
 
           TTY::Table
