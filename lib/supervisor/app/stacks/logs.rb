@@ -48,7 +48,7 @@ module Supervisor
 
           rows = log.each_pair.filter_map do |key, value|
             value = value.split("\n").map do |v|
-              v.length > max_width ? v.truncate(max_width) : v
+              v.truncate(max_width)
             end.join("\n")
 
             ["#{key.titleize.rjust(10)}:", value]
