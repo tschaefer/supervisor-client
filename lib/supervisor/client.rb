@@ -49,16 +49,16 @@ module Supervisor
       true
     end
 
-    def stack_last_logs_entry(stack_uuid)
-      request(:get, "/stacks/#{stack_uuid}/last_logs_entry")
+    def stack_last_log_entry(stack_uuid)
+      request(:get, "/stacks/#{stack_uuid}/log")
     end
 
-    def stack_logs(stack_uuid, read_timeout: 3600, &)
-      path = "/stacks/#{stack_uuid}/logs"
+    def stack_log(stack_uuid, read_timeout: 3600, &)
+      path = "/stacks/#{stack_uuid}/log"
       headers = { Authorization: "Bearer #{@api_key}" }
 
       begin
-        response = self.class.get("#{@base_uri}#{path}", headers:, stream_body: true, read_timeout:, &)
+        response = self.class.get("#{@base_uri}#{path}?follow=true", headers:, stream_body: true, read_timeout:, &)
       rescue StandardError => e
         raise Supervisor::Error, e.message
       end

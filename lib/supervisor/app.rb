@@ -9,7 +9,7 @@ require_relative 'app/stacks/show'
 require_relative 'app/stacks/stats'
 require_relative 'app/stacks/update'
 require_relative 'app/stacks/control'
-require_relative 'app/stacks/logs'
+require_relative 'app/stacks/log'
 
 module Supervisor
   module App
@@ -25,7 +25,7 @@ module Supervisor
         subcommand 'update', 'Update a stack', Supervisor::App::Stacks::UpdateCommand
         subcommand 'delete', 'Delete a stack', Supervisor::App::Stacks::DeleteCommand
         subcommand 'control', 'Control a stack', Supervisor::App::Stacks::ControlCommand
-        subcommand 'logs', 'Show the logs of a stack', Supervisor::App::Stacks::LogsCommand
+        subcommand 'log', 'Show the log of a stack', Supervisor::App::Stacks::LogCommand
       end
     end
   end

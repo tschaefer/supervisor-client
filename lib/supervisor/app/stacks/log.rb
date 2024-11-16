@@ -5,7 +5,7 @@ require_relative '../base'
 module Supervisor
   module App
     module Stacks
-      class LogsCommand < BaseCommand
+      class LogCommand < BaseCommand
         parameter 'STACK_UUID', 'the UUID of the stack'
         option ['--follow'], :flag, 'follow the log output'
         option ['--json'], :flag, 'output as JSON'
@@ -19,7 +19,7 @@ module Supervisor
             end
           end
 
-          log = call(:stack_last_logs_entry, stack_uuid)
+          log = call(:stack_last_log_entry, stack_uuid)
           puts table(log)
         end
 
@@ -27,7 +27,7 @@ module Supervisor
 
         def stream
           configure
-          Supervisor.stack_logs(stack_uuid) do |chunk|
+          Supervisor.stack_log(stack_uuid) do |chunk|
             regexp = Regexp.new('data: (?<data>.*)\n', Regexp::MULTILINE)
             match = regexp.match(chunk)
 

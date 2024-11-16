@@ -53,6 +53,8 @@ Supervisor.stack_stats(stack_uuid)              # Retrieves statistics for a sta
 Supervisor.update_stack(stack_uuid, params)     # Updates an existing stack
 Supervisor.delete_stack(stack_uuid)             # Deletes a specified stack
 Supervisor.control_stack(stack_uuid, command)   # Controls (start, stop) a stack
+Supervisore.stack_last_log_entry(stack_uuid)    # Retrieves the last log entry for a stack
+Supervisor.stack_logs(stack_uuid) { block }     # Retrieves logs for a stack (Server-sent events)
 Supervisor.health_check                         # Checks the health of the service
 ```
 
@@ -105,6 +107,8 @@ supervisor stacks <subcommand> [options]
 | `show`      | Shows details of a specified stack.                   |
 | `stats`     | Retrieves statistics for a stack.                     |
 | `list`      | Lists all stacks in Supervisor.                       |
+| `control`   | Controls (start, stop, rest) a stack.                 |
+| `log`       | Retrieves log for a stack.                            |
 
 #### Subcommand Options
 
