@@ -20,7 +20,7 @@ module Supervisor
           stack = call(:show_stack, stack_uuid)
 
           rows = stack.each_pair.filter_map do |key, value|
-            next if %w[id updated_at].include?(key)
+            next if %w[id].include?(key)
 
             value = stringify(value)
             value = truncate(value)
@@ -39,7 +39,7 @@ module Supervisor
           when 'Hashie::Array'
             value.join("\n")
           when 'Hashie::Mash'
-            value.map { |k, v| "#{k}=#{v}" }.join("\n")
+            value.map { |k, v| "#{k}=\"#{v}\"" }.join("\n")
           else
             value.to_s
           end
