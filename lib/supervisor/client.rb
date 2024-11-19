@@ -86,6 +86,8 @@ module Supervisor
         raise Supervisor::Error, e.message
       end
 
+      raise Supervisor::Error, 'Something went wrong' if response.parsed_response.is_a?(String)
+
       error!(response) if !skip_error
       hashify(response.parsed_response)
     end
