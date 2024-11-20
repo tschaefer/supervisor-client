@@ -16,7 +16,7 @@ module Supervisor
     class Command < Supervisor::App::BaseCommand
       option ['-c', '--configuration-file'], 'FILE', 'configuration file', attribute_name: :cfgfile
 
-      subcommand 'health', 'Check the health of the Supervisor service', Supervisor::App::HealthCommand
+      subcommand 'is-healthy', 'Check the health of the Supervisor service', Supervisor::App::HealthCommand
       subcommand 'stacks', 'Manage stacks' do
         subcommand 'list', 'List all stacks', Supervisor::App::Stacks::ListCommand
         subcommand 'show', 'Show a stack', Supervisor::App::Stacks::ShowCommand

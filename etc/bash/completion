@@ -2,24 +2,24 @@ __supervisor_stacks_completion() {
     type -P -- jq &>/dev/null || return
 
     local cur prev words
-    _get_comp_words_by_ref -n : cur prev words
+    _get_comp_words_by_ref -n : cur words
 
-    [[ "$prev" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] && return
+    for word in "${words[@]}"; do
+        if [[ ${word} =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]; then
+            return
+        fi
+    done
 
     local configuration_file
     for ((i=0; i < ${#words[@]}; i++)); do
         if [[ "${words[i]}" == "--configuration-file" ]]; then
-            configuration_file="${words[i+1]}"
+            configuration_file="${words[i]} ${words[i+1]}"
             break
         fi
     done
 
     local cmd
-    if [[ -n "${configuration_file}" ]]; then
-        cmd="supervisor --configuration-file ${configuration_file} stacks list --json"
-    else
-        cmd="supervisor stacks list --json"
-    fi
+    cmd="supervisor ${configuration_file} stacks list --json"
 
     local stacks
     stacks=$(eval ${cmd} | jq -r '.[].uuid')
@@ -89,7 +89,7 @@ _supervisor_stack_show() {
     options="${options} ${options_show}"
 
     case "$prev" in
-        --help|--json)
+        --help)
             return
             ;;
     esac
@@ -109,7 +109,7 @@ _supervisor_stacks_list() {
     local options='--help --json'
 
     case "$prev" in
-        --help|--json)
+        --help)
             return
             ;;
     esac
@@ -127,7 +127,7 @@ _supervisor_stack_stats() {
     local options='--help --json'
 
     case "$prev" in
-        --help|--json)
+        --help)
             return
             ;;
     esac
@@ -189,10 +189,10 @@ _supervisor_stack_log() {
     local cur prev words
     _get_comp_words_by_ref -n : cur prev words
 
-    local options='--help --json --follow'
+    local options='--help --follow'
 
     case "$prev" in
-        --help|--json|--follow)
+        --help)
             return
             ;;
     esac
@@ -274,7 +274,7 @@ _supervisor() {
     local cur prev words
     _get_comp_words_by_ref -n : cur prev words
 
-    local actions="health stacks"
+    local actions="is-healthy stacks"
     local options='--help --man --version'
     local options_config='--configuration-file'
 
@@ -283,7 +283,7 @@ _supervisor() {
     local word
     for word in "${words[@]}"; do
         case $word in
-            health)
+            is-healthy)
                 _supervisor_health
                 return
                 ;;

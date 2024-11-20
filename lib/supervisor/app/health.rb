@@ -12,16 +12,13 @@ module Supervisor
         health = call(:health_check)
         @code = health.code
 
-        if quiet?
-          healthy? ? exit(0) : exit(1)
-        end
-
         if healthy?
-          puts 'Supervisor service is healthy.'
+          puts 'healthy' unless quiet?
           exit 0
+        else
+          puts 'unhealthy' unless quiet?
+          exit 1
         end
-
-        bailout('Supervisor service is not healthy.')
       end
 
       private
