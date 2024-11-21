@@ -49,11 +49,11 @@ module Supervisor
       true
     end
 
-    def stack_last_log_entry(stack_uuid)
-      request(:get, "/stacks/#{stack_uuid}/log")
+    def fetch_stack_log(stack_uuid, entries = 10)
+      request(:get, "/stacks/#{stack_uuid}/log?entries=#{entries}")
     end
 
-    def stack_log(stack_uuid, read_timeout: 3600, &)
+    def follow_stack_log(stack_uuid, read_timeout: 3600, &)
       path = "/stacks/#{stack_uuid}/log"
       headers = { Authorization: "Bearer #{@api_key}" }
 

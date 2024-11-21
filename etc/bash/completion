@@ -19,7 +19,7 @@ __supervisor_stacks_completion() {
     done
 
     local cmd
-    cmd="supervisor ${configuration_file} stacks list --json"
+    cmd="supervisor ${configuration_file} list --json"
 
     local stacks
     stacks=$(eval ${cmd} | jq -r '.[].uuid')
@@ -189,7 +189,7 @@ _supervisor_stack_log() {
     local cur prev words
     _get_comp_words_by_ref -n : cur prev words
 
-    local options='--help --follow'
+    local options='--help --json --entries --follow'
 
     case "$prev" in
         --help)
@@ -205,15 +205,41 @@ _supervisor_stack_log() {
     __supervisor_stacks_completion
 }
 
-_supervisor_stacks() {
+_supervisor_health() {
     local cur prev words
     _get_comp_words_by_ref -n : cur prev words
 
-    local actions="create delete list show stats update control log"
+    local options='--help --json --quiet'
+
+    case "$prev" in
+        --help|--json|--quiet)
+            return
+            ;;
+    esac
+
+    if [[ "$cur" == -* ]]; then
+        mapfile -t COMPREPLY < <(compgen -W "$options" -- "$cur")
+        return
+    fi
+}
+
+_supervisor() {
+    local cur prev words
+    _get_comp_words_by_ref -n : cur prev words
+
+    local actions="is-healthy create delete list show stats update control log"
+    local options='--help --man --version'
+    local options_config='--configuration-file'
+
+    options="${options} ${options_config}"
 
     local word
     for word in "${words[@]}"; do
         case $word in
+            is-healthy)
+                _supervisor_health
+                return
+                ;;
             delete)
                 _supervisor_stack_delete
                 return
@@ -244,51 +270,6 @@ _supervisor_stacks() {
                 ;;
             log)
                 _supervisor_stack_log
-                return
-                ;;
-        esac
-    done
-
-    mapfile -t COMPREPLY < <(compgen -W "${actions}" -- "$cur")
-}
-
-_supervisor_health() {
-    local cur prev words
-    _get_comp_words_by_ref -n : cur prev words
-
-    local options='--help --json --quiet'
-
-    case "$prev" in
-        --help|--json|--quiet)
-            return
-            ;;
-    esac
-
-    if [[ "$cur" == -* ]]; then
-        mapfile -t COMPREPLY < <(compgen -W "$options" -- "$cur")
-        return
-    fi
-}
-
-_supervisor() {
-    local cur prev words
-    _get_comp_words_by_ref -n : cur prev words
-
-    local actions="is-healthy stacks"
-    local options='--help --man --version'
-    local options_config='--configuration-file'
-
-    options="${options} ${options_config}"
-
-    local word
-    for word in "${words[@]}"; do
-        case $word in
-            is-healthy)
-                _supervisor_health
-                return
-                ;;
-            stacks)
-                _supervisor_stacks
                 return
                 ;;
         esac

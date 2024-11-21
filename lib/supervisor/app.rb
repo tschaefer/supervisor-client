@@ -17,16 +17,14 @@ module Supervisor
       option ['-c', '--configuration-file'], 'FILE', 'configuration file', attribute_name: :cfgfile
 
       subcommand 'is-healthy', 'Check the health of the Supervisor service', Supervisor::App::HealthCommand
-      subcommand 'stacks', 'Manage stacks' do
-        subcommand 'list', 'List all stacks', Supervisor::App::Stacks::ListCommand
-        subcommand 'show', 'Show a stack', Supervisor::App::Stacks::ShowCommand
-        subcommand 'stats', 'Show stats of a stack', Supervisor::App::Stacks::StatsCommand
-        subcommand 'create', 'Create a stack', Supervisor::App::Stacks::CreateCommand
-        subcommand 'update', 'Update a stack', Supervisor::App::Stacks::UpdateCommand
-        subcommand 'delete', 'Delete a stack', Supervisor::App::Stacks::DeleteCommand
-        subcommand 'control', 'Control a stack', Supervisor::App::Stacks::ControlCommand
-        subcommand 'log', 'Show the log of a stack', Supervisor::App::Stacks::LogCommand
-      end
+      subcommand 'list', 'List all stacks', Supervisor::App::Stacks::ListCommand
+      subcommand 'show', 'Show a stack', Supervisor::App::Stacks::ShowCommand
+      subcommand 'stats', 'Show stats of a stack', Supervisor::App::Stacks::StatsCommand
+      subcommand 'create', 'Create a stack', Supervisor::App::Stacks::CreateCommand
+      subcommand 'update', 'Update a stack', Supervisor::App::Stacks::UpdateCommand
+      subcommand 'delete', 'Delete a stack', Supervisor::App::Stacks::DeleteCommand
+      subcommand 'control', 'Control a stack', Supervisor::App::Stacks::ControlCommand
+      subcommand 'log', 'Show the log of a stack', Supervisor::App::Stacks::LogCommand
     end
   end
 end

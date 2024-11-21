@@ -26,6 +26,14 @@ Or install it directly:
 gem install supervisor
 ```
 
+Or install from source:
+
+```bash
+git clone https://github.com/tschaefer/supervisor-client
+cd supervisor-client
+rake install
+```
+
 ## Configuration
 
 Before using the library, configure the `base_url` and `api_key`:
@@ -61,7 +69,7 @@ Supervisor.health_check                         # Checks the health of the servi
 ## CLI Usage
 
 The `supervisor` CLI provides easy command-line access to Supervisor API
-actions. The CLI has two main subcommands: `health` and `stacks`.
+actions.
 
 ### Configuration
 
@@ -83,20 +91,16 @@ supervisor <command> [options]
 ### Health Check
 
 ```bash
-supervisor health
+supervisor is-healthy
 ```
 
 Checks the health of the Supervisor service.
 
 ### Stack Management
 
-The `stacks` subcommand provides a variety of operations for managing stacks.
+The `stacks` commands provide a variety of operations for managing stacks.
 
-```bash
-supervisor stacks <subcommand> [options]
-```
-
-#### Available Stack Subcommands
+#### Available Stack Commands
 
 | Subcommand  | Description                                           |
 |-------------|-------------------------------------------------------|
@@ -110,7 +114,7 @@ supervisor stacks <subcommand> [options]
 | `control`   | Controls (start, stop, rest) a stack.                 |
 | `log`       | Retrieves log for a stack.                            |
 
-#### Subcommand Options
+#### Command Options
 
 - **`create` and `update`**: Both require the `--manifest-file FILE` option to
   specify a YAML manifest file describing the stack. The optional `--decrypt`
@@ -118,34 +122,37 @@ supervisor stacks <subcommand> [options]
   attributes in the YAML file.
   - **Example**:
     ```bash
-    supervisor stacks create --manifest-file stack.yaml --decrypt
-    supervisor stacks update --manifest-file stack.yaml --decrypt STACK-UUID
+    supervisor create --manifest-file stack.yaml --decrypt
     ```
 
 - **`update`**: In addition to `--manifest-file FILE`, `update` requires the
   parameter `STACK-UUID` for the stack to update.
+  - **Example**:
+    ```bash
+    supervisor update --manifest-file stack.yaml STACK-UUID
+    ```
 
 - **`show`, `stats`, `delete`**: Each of these subcommands requires
   the parameter `STACK-UUID` for the stack to operate on.
   - **Example**:
     ```bash
-    supervisor stacks show STACK-UUID
-    supervisor stacks stats STACK-UUID
-    supervisor stacks delete STACK-UUID
+    supervisor show STACK-UUID
+    supervisor stats STACK-UUID
+    supervisor delete STACK-UUID
     ```
 
 - **`show`**: By default, sensitive data in the output is filtered. Use the
   `--unfiltered` option to disable filtering.
   - **Example**:
     ```bash
-    supervisor stacks show STACK-UUID --unfiltered
+    supervisor show STACK-UUID --unfiltered
     ```
 
 - **`show`, `stats`, `list`**: These subcommands output information in a table
   format by default. Use the `--json` option to output data in JSON format.
   - **Example**:
     ```bash
-    supervisor stacks list --json
+    supervisor list --json
     ```
 
 ### Bash Completion
