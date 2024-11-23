@@ -2,14 +2,14 @@
 
 require_relative 'app/base'
 require_relative 'app/health'
+require_relative 'app/stacks/control'
 require_relative 'app/stacks/create'
 require_relative 'app/stacks/delete'
 require_relative 'app/stacks/list'
+require_relative 'app/stacks/log'
 require_relative 'app/stacks/show'
 require_relative 'app/stacks/stats'
 require_relative 'app/stacks/update'
-require_relative 'app/stacks/control'
-require_relative 'app/stacks/log'
 
 module Supervisor
   module App

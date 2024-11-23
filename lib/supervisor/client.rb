@@ -3,8 +3,6 @@
 require 'httparty'
 require 'hashie'
 
-require 'openssl'
-
 module Supervisor
   class Client
     include HTTParty

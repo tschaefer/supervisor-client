@@ -4,6 +4,7 @@ require 'clamp'
 require 'pastel'
 require 'tty-pager'
 
+require 'active_support'
 require 'active_support/parameter_filter'
 
 require 'supervisor'

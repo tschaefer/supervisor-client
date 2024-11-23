@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require 'active_support'
-require 'active_support/core_ext'
 require 'tty-screen'
 require 'tty-table'
+
+require 'active_support'
+require 'active_support/core_ext'
 
 require_relative '../base'
 
