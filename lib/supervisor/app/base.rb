@@ -2,18 +2,19 @@
 
 require 'clamp'
 require 'pastel'
+require 'tty-screen'
+require 'tty-table'
 require 'tty-pager'
 
 require 'active_support'
+require 'active_support/core_ext'
 require 'active_support/parameter_filter'
-
-require 'supervisor'
 
 Clamp.allow_options_after_parameters = true
 
 module Supervisor
   module App
-    class BaseCommand < Clamp::Command
+    class Base < Clamp::Command
       option ['-m', '--man'], :flag, 'show man page' do
         manpage = <<~MANPAGE
           Name:

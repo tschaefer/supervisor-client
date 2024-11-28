@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../base'
-
 module Supervisor
   module App
     module Stacks
-      class DeleteCommand < Supervisor::App::BaseCommand
+      class Delete < Supervisor::App::Base
         parameter 'STACK_UUID', 'the UUID of the stack to delete'
 
         def execute

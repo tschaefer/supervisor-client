@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../base'
-require_relative 'concerns/manifest'
-
 module Supervisor
   module App
     module Stacks
-      class UpdateCommand < Supervisor::App::BaseCommand
+      class Update < Supervisor::App::Base
         include Supervisor::App::Stacks::Concerns::Manifest
 
         parameter 'STACK_UUID', 'the UUID of the stack to update'

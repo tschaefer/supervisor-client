@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../base'
-
 module Supervisor
   module App
     module Stacks
-      class LogCommand < BaseCommand
+      class Log < Base
         parameter 'STACK_UUID', 'the UUID of the stack'
         option ['--entries'], 'ENTRIES', 'number of log entries to show', default: 10
         option ['--follow'], :flag, 'follow the log output'

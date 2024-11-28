@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'base'
-
 module Supervisor
   module App
-    class HealthCommand < Supervisor::App::BaseCommand
+    class Health < Supervisor::App::Base
       option ['--json'], :flag, 'output as JSON'
       option ['--quiet'], :flag, 'show no output'
 

@@ -36,4 +36,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'tty-pager', '~> 0.14.0'
   spec.add_dependency 'tty-screen', '~> 0.8.2'
   spec.add_dependency 'tty-table', '~> 0.12.0'
+  spec.add_dependency 'zeitwerk', '~> 2.7.1'
 end

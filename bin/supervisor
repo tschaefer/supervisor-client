@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'supervisor/app'
+require 'supervisor'
 
 Supervisor::App::Command.run

@@ -1,17 +1,9 @@
 # frozen_string_literal: true
 
-require 'tty-screen'
-require 'tty-table'
-
-require 'active_support'
-require 'active_support/core_ext'
-
-require_relative '../base'
-
 module Supervisor
   module App
     module Stacks
-      class ShowCommand < Supervisor::App::BaseCommand
+      class Show < Supervisor::App::Base
         parameter 'STACK_UUID', 'the UUID of the stack to show'
 
         option ['--json'], :flag, 'output as JSON'

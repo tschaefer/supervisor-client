@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../base'
-require_relative 'concerns/manifest'
-
 module Supervisor
   module App
     module Stacks
-      class CreateCommand < Supervisor::App::BaseCommand
+      class Create < Supervisor::App::Base
         include Supervisor::App::Stacks::Concerns::Manifest
 
         option ['--manifest-file'], 'FILE', 'manifest file', required: true, attribute_name: :file

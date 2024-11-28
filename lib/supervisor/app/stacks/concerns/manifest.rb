@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'active_support'
-require 'active_support/concern'
-
 module Supervisor
   module App
     module Stacks

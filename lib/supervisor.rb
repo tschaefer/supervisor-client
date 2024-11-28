@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'supervisor/version'
-require_relative 'supervisor/client'
+require 'zeitwerk'
+
+loader = Zeitwerk::Loader.for_gem
+loader.setup
 
 module Supervisor
   class Error < StandardError; end

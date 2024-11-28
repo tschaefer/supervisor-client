@@ -1,16 +1,9 @@
 # frozen_string_literal: true
 
-require 'tty-table'
-
-require 'active_support'
-require 'active_support/core_ext'
-
-require_relative '../base'
-
 module Supervisor
   module App
     module Stacks
-      class StatsCommand < Supervisor::App::BaseCommand
+      class Stats < Supervisor::App::Base
         parameter 'STACK_UUID', 'the UUID of the stack to show stats'
 
         option ['--json'], :flag, 'output as JSON'
