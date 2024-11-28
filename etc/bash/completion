@@ -19,7 +19,7 @@ __supervisor_stacks_completion() {
     done
 
     local cmd
-    cmd="supervisor ${configuration_file} list --json"
+    cmd="supervisor ${configuration_file} stacks list --json"
 
     local stacks
     stacks=$(eval ${cmd} | jq -r '.[].uuid')
@@ -165,7 +165,7 @@ _supervisor_stack_control() {
     _get_comp_words_by_ref -n : cur prev words
 
     local options='--help --command'
-    local actions='start stop restart'
+    local actions='start stop restart redeploy'
 
     case "$prev" in
         --command)
@@ -223,23 +223,66 @@ _supervisor_health() {
     fi
 }
 
-_supervisor() {
+_supervisor_deploy() {
+    local cur prev
+    _get_comp_words_by_ref -n : cur prev
+
+    local options='--help'
+    local options_deploy='--host --skip-docker --skip-traefik'
+
+    options="${options} ${options_deploy}"
+
+    case "$prev" in
+        --help)
+            return
+            ;;
+        --host)
+            _known_hosts
+            return
+            ;;
+    esac
+
+    if [[ "$cur" == -* ]]; then
+        mapfile -t COMPREPLY < <(compgen -W "$options" -- "$cur")
+        return
+    fi
+}
+
+_supervisor_redeploy() {
+    local cur prev
+    _get_comp_words_by_ref -n : cur prev
+
+    local options='--help'
+    local options_deploy='--host'
+
+    options="${options} ${options_deploy}"
+
+    case "$prev" in
+        --help)
+            return
+            ;;
+        --host)
+            _known_hosts
+            return
+            ;;
+    esac
+
+    if [[ "$cur" == -* ]]; then
+        mapfile -t COMPREPLY < <(compgen -W "$options" -- "$cur")
+        return
+    fi
+}
+
+_supervisor_stacks() {
     local cur prev words
     _get_comp_words_by_ref -n : cur prev words
 
-    local actions="is-healthy create delete list show stats update control log"
+    local actions="create delete list show stats update control log"
     local options='--help --man --version'
-    local options_config='--configuration-file'
-
-    options="${options} ${options_config}"
 
     local word
     for word in "${words[@]}"; do
         case $word in
-            is-healthy)
-                _supervisor_health
-                return
-                ;;
             delete)
                 _supervisor_stack_delete
                 return
@@ -270,6 +313,52 @@ _supervisor() {
                 ;;
             log)
                 _supervisor_stack_log
+                return
+                ;;
+        esac
+    done
+
+    case "$prev" in
+        --help|--man|--version)
+            return
+            ;;
+    esac
+
+    if [[ "$cur" == -* ]]; then
+        mapfile -t COMPREPLY < <(compgen -W "${options}" -- "$cur")
+        return
+    fi
+
+    mapfile -t COMPREPLY < <(compgen -W "${actions}" -- "$cur")
+}
+
+_supervisor() {
+    local cur prev words
+    _get_comp_words_by_ref -n : cur prev words
+
+    local actions="redeploy deploy is-healthy stacks"
+    local options='--help --man --version'
+    local options_config='--configuration-file'
+
+    options="${options} ${options_config}"
+
+    local word
+    for word in "${words[@]}"; do
+        case $word in
+            deploy)
+                _supervisor_deploy
+                return
+                ;;
+            redeploy)
+                _supervisor_redeploy
+                return
+                ;;
+            is-healthy)
+                _supervisor_health
+                return
+                ;;
+            stacks)
+                _supervisor_stacks
                 return
                 ;;
         esac
