@@ -70,6 +70,7 @@ module Supervisor
 
         cfgfile = @cfgfile.presence || File.join(Dir.home, '.supervisor')
         settings = File.readable?(cfgfile) ? YAML.load_file(cfgfile) : bailout('No configuration file found')
+
         @settings = Hashie::Mash.new(settings)
       end
 

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'securerandom'
 require 'sshkit'
 require 'sshkit/dsl'
 
@@ -8,10 +7,6 @@ module Supervisor
   module App
     class Deploy < Supervisor::App::Base
       include SSHKit::DSL
-      include Supervisor::App::Concerns::Traefik
-      include Supervisor::App::Concerns::Prerequisites
-      include Supervisor::App::Concerns::Docker
-      include Supervisor::App::Concerns::Supervisor
 
       option ['--host'], 'HOST', 'the host to deploy to', required: true
       option ['--skip-docker'], :flag, 'skip Docker installation'
@@ -20,10 +15,10 @@ module Supervisor
       def execute
         @host = SSHKit::Host.new(host)
 
-        prerequisites!
-        install_docker
-        deploy_traefik
-        deploy_supervisor
+        Supervisor::App::Services::Prerequisites.new(host, settings).run
+        Supervisor::App::Services::Docker.new(host, settings).run unless skip_docker?
+        Supervisor::App::Services::Traefik.new(host, settings).run unless skip_traefik?
+        Supervisor::App::Services::Supervisor.new(host, settings).run
       rescue SSHKit::Runner::ExecuteError => e
         bailout(e.message)
       end
