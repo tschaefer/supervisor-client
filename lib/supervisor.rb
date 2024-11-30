@@ -3,6 +3,7 @@
 require 'zeitwerk'
 
 loader = Zeitwerk::Loader.for_gem
+loader.collapse("#{__dir__}/supervisor/app/stacks/concerns")
 loader.setup
 
 module Supervisor
@@ -17,7 +18,7 @@ module Supervisor
     end
 
     def configured?
-      @client ? true : false
+      defined?(@client)
     end
 
     def configured!

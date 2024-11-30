@@ -9,6 +9,8 @@ module Supervisor
       class Traefik
         include SSHKit::DSL
 
+        delegate :argumentize, to: ::Supervisor::App::Services::Utils
+
         def initialize(host, settings)
           @host = host
           @settings = settings
@@ -16,6 +18,19 @@ module Supervisor
 
         def run
           ensure_network
+          command = docker_command
+
+          on @host do
+            as :root do
+              execute :mkdir, '-p', '/var/lib/traefik'
+              execute :docker, *command
+            end
+          end
+        end
+
+        private
+
+        def docker_command
           command = %w[
             run --detach --restart always
             --name traefik
@@ -29,15 +44,8 @@ module Supervisor
           command += ['traefik:v3.2.1']
           command += args
 
-          on @host do
-            as :root do
-              execute :mkdir, '-p', '/var/lib/traefik'
-              execute :docker, *command
-            end
-          end
+          command
         end
-
-        private
 
         def ensure_network
           on @host do
@@ -65,8 +73,7 @@ module Supervisor
             'entrypoints.websecure.address' => ':443',
             'certificatesresolvers.letsencrypt.acme.email' => email,
             'certificatesresolvers.letsencrypt.acme.storage' => '/etc/traefik/acme.json',
-            'certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint' => 'web',
-            'log.level' => 'DEBUG'
+            'certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint' => 'web'
           }
           args.merge!(@settings.deploy&.traefik&.args.presence || {})
 
@@ -78,10 +85,6 @@ module Supervisor
           env.merge!(@settings.deploy&.traefik&.env.presence || {})
 
           argumentize(env, prefix: '--env ')
-        end
-
-        def argumentize(hash, prefix: '--')
-          hash.map { |key, value| "#{prefix}#{key}=\"#{value}\"" }
         end
       end
     end

@@ -10,24 +10,16 @@ module Supervisor
       class Supervisor
         include SSHKit::DSL
 
+        delegate :argumentize, to: ::Supervisor::App::Services::Utils
+
         def initialize(host, settings)
           @host = host
           @settings = settings
         end
 
         def run
-          command = %w[
-            run --detach --restart always
-            --name supervisor
-            --volume /var/run/docker.sock:/var/run/docker.sock
-            --volume /var/lib/supervisor:/rails/storage
-            --network supervisor
-          ]
-          command += labels
-          command += env
-          command += ['ghcr.io/tschaefer/supervisor:main']
-
           ensure_network
+          command = docker_command
 
           on @host do
             as :root do
@@ -39,6 +31,21 @@ module Supervisor
         end
 
         private
+
+        def docker_command
+          command = %w[
+            run --detach --restart always
+            --name supervisor
+            --volume /var/run/docker.sock:/var/run/docker.sock
+            --volume /var/lib/supervisor:/rails/storage
+            --network supervisor
+          ]
+          command += labels
+          command += env
+          command += ['ghcr.io/tschaefer/supervisor:main']
+
+          command
+        end
 
         def ensure_network
           on @host do
@@ -73,10 +80,6 @@ module Supervisor
           env.merge!(@settings.deploy&.supervisor&.env.presence || {})
 
           argumentize(env, prefix: '--env ')
-        end
-
-        def argumentize(hash, prefix: '--')
-          hash.map { |key, value| "#{prefix}#{key}=\"#{value}\"" }
         end
       end
     end
