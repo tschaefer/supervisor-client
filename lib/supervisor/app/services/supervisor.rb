@@ -18,9 +18,10 @@ module Supervisor
         end
 
         def run
+          pre_hook
           ensure_network
-          command = docker_command
 
+          command = docker_command
           on @host do
             as :root do
               execute :mkdir, '-p', '/var/lib/supervisor'
@@ -28,9 +29,31 @@ module Supervisor
               execute :docker, *command
             end
           end
+
+          post_hook
         end
 
         private
+
+        def pre_hook
+          return unless @settings.deploy&.hooks_path&.present?
+
+          on @host do
+            as :root do
+              execute '/tmp/supervisor_hooks/pre-supervisor' if test '[ -e /tmp/supervisor_hooks/pre-supervisor ]'
+            end
+          end
+        end
+
+        def post_hook
+          return unless @settings.deploy&.hooks_path&.postsent?
+
+          on @host do
+            as :root do
+              execute '/tmp/supervisor_hooks/post-supervisor' if test '[ -e /tmp/supervisor_hooks/post-supervisor ]'
+            end
+          end
+        end
 
         def docker_command
           command = %w[

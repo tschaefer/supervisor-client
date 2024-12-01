@@ -228,7 +228,7 @@ _supervisor_deploy() {
     _get_comp_words_by_ref -n : cur prev
 
     local options='--help'
-    local options_deploy='--host --skip-docker --skip-traefik'
+    local options_deploy='--host --skip-docker --skip-traefik --verbose'
 
     options="${options} ${options_deploy}"
 
@@ -253,7 +253,7 @@ _supervisor_redeploy() {
     _get_comp_words_by_ref -n : cur prev
 
     local options='--help'
-    local options_deploy='--host --with-traefik'
+    local options_deploy='--host --verbose --with-traefik'
 
     options="${options} ${options_deploy}"
 

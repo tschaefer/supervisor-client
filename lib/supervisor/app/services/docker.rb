@@ -32,6 +32,20 @@ module Supervisor
               end
             end
           end
+
+          docker_setup
+        end
+
+        private
+
+        def docker_setup
+          return unless @settings.deploy&.hooks_path&.present?
+
+          on @host do
+            as :root do
+              execute '/tmp/supervisor_hooks/docker-setup' if test '[ -e /tmp/supervisor_hooks/docker-setup ]'
+            end
+          end
         end
       end
     end

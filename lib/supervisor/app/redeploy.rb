@@ -9,17 +9,23 @@ module Supervisor
       include SSHKit::DSL
 
       option ['--host'], 'HOST', 'the host to redeploy to', required: true
+      option ['--verbose'], :flag, 'show SSHKit output'
       option ['--with-traefik'], :flag, 'redeploy Traefik'
 
       def execute
+        SSHKit.config.use_format verbose? ? :pretty : :dot
         @host = SSHKit::Host.new(host)
 
-        Supervisor::App::Services::Prerequisites.new(host, settings).run
+        Supervisor::App::Services::Prerequisites.new(@host, settings).run
         redeploy_traefik
         redeploy_supervisor
+        post_cleanup
+        puts unless verbose?
       rescue SSHKit::Runner::ExecuteError => e
         bailout(e.message)
       end
+
+      private
 
       def redeploy_traefik
         return unless with_traefik?
@@ -40,6 +46,14 @@ module Supervisor
           end
         end
         Supervisor::App::Services::Supervisor.new(host, settings).run
+      end
+
+      def post_cleanup
+        on @host do
+          as :root do
+            execute :rm, '-rf', '/tmp/supervisor_hooks'
+          end
+        end
       end
     end
   end
