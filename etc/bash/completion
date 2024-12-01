@@ -253,7 +253,7 @@ _supervisor_redeploy() {
     _get_comp_words_by_ref -n : cur prev
 
     local options='--help'
-    local options_deploy='--host'
+    local options_deploy='--host --with-traefik'
 
     options="${options} ${options_deploy}"
 
