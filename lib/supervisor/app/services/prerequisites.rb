@@ -36,7 +36,7 @@ module Supervisor
         end
 
         def copy_hooks_dir
-          return unless @settings.deploy&.hooks_path&.present?
+          return if @settings.deploy&.hooks_path&.empty?
 
           hooks = @settings.deploy.hooks_path
           on @host do

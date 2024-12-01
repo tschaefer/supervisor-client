@@ -36,7 +36,7 @@ module Supervisor
         private
 
         def pre_hook
-          return unless @settings.deploy&.hooks_path&.present?
+          return if @settings.deploy&.hooks_path&.empty?
 
           on @host do
             as :root do
@@ -46,7 +46,7 @@ module Supervisor
         end
 
         def post_hook
-          return unless @settings.deploy&.hooks_path&.postsent?
+          return if @settings.deploy&.hooks_path&.empty?
 
           on @host do
             as :root do
@@ -90,7 +90,7 @@ module Supervisor
             'traefik.http.routers.supervisor.rule' => rule,
             'traefik.http.routers.supervisor.entrypoints' => 'websecure'
           }
-          labels.merge!(@settings.deploy&.supervisor&.labels.presence || {})
+          labels.merge!(@settings.deploy&.supervisor&.labels || {})
 
           argumentize(labels, prefix: '--label ')
         end
@@ -100,7 +100,7 @@ module Supervisor
             'SECRET_KEY_BASE' => SecureRandom.hex(16),
             'SUPERVISOR_API_KEY' => @settings.api.token
           }
-          env.merge!(@settings.deploy&.supervisor&.env.presence || {})
+          env.merge!(@settings.deploy&.supervisor&.env || {})
 
           argumentize(env, prefix: '--env ')
         end

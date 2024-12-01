@@ -34,7 +34,7 @@ module Supervisor
         private
 
         def pre_hook
-          return unless @settings.deploy&.hooks_path&.present?
+          return if @settings.deploy&.hooks_path&.empty?
 
           on @host do
             as :root do
@@ -44,7 +44,7 @@ module Supervisor
         end
 
         def post_hook
-          return unless @settings.deploy&.hooks_path&.present?
+          return if @settings.deploy&.hooks_path&.empty?
 
           on @host do
             as :root do
@@ -82,7 +82,7 @@ module Supervisor
 
         def labels
           labels = {}
-          labels.merge!(@settings.deploy&.traefik&.labels.presence || {})
+          labels.merge!(@settings.deploy&.traefik&.labels || {})
 
           argumentize(labels, prefix: '--label ')
         end
@@ -98,14 +98,14 @@ module Supervisor
             'certificatesresolvers.letsencrypt.acme.storage' => '/etc/traefik/acme.json',
             'certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint' => 'web'
           }
-          args.merge!(@settings.deploy&.traefik&.args.presence || {})
+          args.merge!(@settings.deploy&.traefik&.args || {})
 
           argumentize(args)
         end
 
         def env
           env = {}
-          env.merge!(@settings.deploy&.traefik&.env.presence || {})
+          env.merge!(@settings.deploy&.traefik&.env || {})
 
           argumentize(env, prefix: '--env ')
         end

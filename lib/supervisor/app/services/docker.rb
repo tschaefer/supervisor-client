@@ -18,13 +18,11 @@ module Supervisor
           on @host do
             as :root do
               if execute :docker, '-v', raise_on_non_zero_exit: false
-                info 'Docker is already installed'
                 unless execute :docker, 'version', raise_on_non_zero_exit: false
                   error 'Docker is not running'
                   exit 1
                 end
               else
-                info 'Installing Docker'
                 within '/tmp' do
                   execute :curl, '-fsSL', 'https://get.docker.com', '-o', 'get-docker.sh'
                   execute :sh, 'get-docker.sh'
@@ -39,7 +37,7 @@ module Supervisor
         private
 
         def docker_setup
-          return unless @settings.deploy&.hooks_path&.present?
+          return if @settings.deploy&.hooks_path&.empty?
 
           on @host do
             as :root do
