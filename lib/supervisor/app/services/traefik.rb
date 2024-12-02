@@ -22,7 +22,7 @@ module Supervisor
           command = command()
           on @host do
             as :root do
-              execute :mkdir, '-p', '/var/lib/traefik'
+              execute :mkdir, '-p', '/var/lib/traefik/certs.d'
               execute :docker, *command
             end
           end
@@ -55,7 +55,7 @@ module Supervisor
             'entrypoints.web.address' => ':80',
             'entrypoints.websecure.address' => ':443',
             'certificatesresolvers.letsencrypt.acme.email' => email,
-            'certificatesresolvers.letsencrypt.acme.storage' => '/etc/traefik/acme.json',
+            'certificatesresolvers.letsencrypt.acme.storage' => '/etc/traefik/certs.d/acme.json',
             'certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint' => 'web'
           }
           args.merge!(@settings.deploy&.traefik&.args || {})
