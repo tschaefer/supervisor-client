@@ -16,7 +16,7 @@ module Supervisor
         end
 
         def run
-          return if @settings.deploy&.hooks_path&.empty?
+          return unless @settings.deploy&.hooks_path&.presence
           return unless hook_exist?
 
           execute_hook
