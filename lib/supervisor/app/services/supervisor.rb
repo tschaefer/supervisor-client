@@ -41,23 +41,12 @@ module Supervisor
             --name supervisor
             --volume /var/run/docker.sock:/var/run/docker.sock
             --volume /var/lib/supervisor:/rails/storage
-            --network supervisor
           ]
           command += labels
           command += env
           command += ['ghcr.io/tschaefer/supervisor:main']
 
           command
-        end
-
-        def ensure_network
-          on @host do
-            as :root do
-              unless test 'docker network list --format {{.Name}} | grep -q supervisor'
-                execute :docker, 'network', 'create', '--attachable', '--ipv6', 'supervisor'
-              end
-            end
-          end
         end
 
         def labels

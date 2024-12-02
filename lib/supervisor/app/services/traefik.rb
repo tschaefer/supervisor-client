@@ -39,7 +39,6 @@ module Supervisor
             --name traefik
             --volume /var/run/docker.sock:/var/run/docker.sock
             --volume /var/lib/traefik:/etc/traefik
-            --network supervisor
             --publish 80:80 --publish 443:443
           ]
           command += labels
@@ -48,16 +47,6 @@ module Supervisor
           command += args
 
           command
-        end
-
-        def ensure_network
-          on @host do
-            as :root do
-              unless test 'docker network list --format {{.Name}} | grep -q supervisor'
-                execute :docker, 'network', 'create', '--attachable', '--ipv6', 'supervisor'
-              end
-            end
-          end
         end
 
         def labels
