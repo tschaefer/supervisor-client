@@ -21,7 +21,6 @@ module Supervisor
         setup_docker
         deploy_traefik
         Supervisor::App::Services::Supervisor.new(host, settings).run
-        post_cleanup
         puts unless verbose?
       rescue SSHKit::Runner::ExecuteError => e
         bailout(e.message)
@@ -39,14 +38,6 @@ module Supervisor
         return if skip_traefik?
 
         Supervisor::App::Services::Traefik.new(host, settings).run
-      end
-
-      def post_cleanup
-        on @host do
-          as :root do
-            execute :rm, '-rf', '/tmp/supervisor_hooks'
-          end
-        end
       end
     end
   end

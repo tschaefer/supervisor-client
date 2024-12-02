@@ -18,7 +18,7 @@ module Supervisor
         end
 
         def run
-          pre_hook
+          ::Supervisor::App::Services::Hook.new(@host, @settings, 'pre-supervisor').run
           ensure_network
 
           command = docker_command
@@ -30,30 +30,10 @@ module Supervisor
             end
           end
 
-          post_hook
+          ::Supervisor::App::Services::Hook.new(@host, @settings, 'post-supervisor').run
         end
 
         private
-
-        def pre_hook
-          return if @settings.deploy&.hooks_path&.empty?
-
-          on @host do
-            as :root do
-              execute '/tmp/supervisor_hooks/pre-supervisor' if test '[ -e /tmp/supervisor_hooks/pre-supervisor ]'
-            end
-          end
-        end
-
-        def post_hook
-          return if @settings.deploy&.hooks_path&.empty?
-
-          on @host do
-            as :root do
-              execute '/tmp/supervisor_hooks/post-supervisor' if test '[ -e /tmp/supervisor_hooks/post-supervisor ]'
-            end
-          end
-        end
 
         def docker_command
           command = %w[

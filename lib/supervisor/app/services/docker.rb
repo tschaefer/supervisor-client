@@ -31,19 +31,7 @@ module Supervisor
             end
           end
 
-          docker_setup
-        end
-
-        private
-
-        def docker_setup
-          return if @settings.deploy&.hooks_path&.empty?
-
-          on @host do
-            as :root do
-              execute '/tmp/supervisor_hooks/docker-setup' if test '[ -e /tmp/supervisor_hooks/docker-setup ]'
-            end
-          end
+          ::Supervisor::App::Services::Hook.new(@host, @settings, 'docker-setup').run
         end
       end
     end

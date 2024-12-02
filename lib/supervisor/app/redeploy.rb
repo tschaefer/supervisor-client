@@ -19,7 +19,6 @@ module Supervisor
         Supervisor::App::Services::Prerequisites.new(@host, settings).run
         redeploy_traefik
         redeploy_supervisor
-        post_cleanup
         puts unless verbose?
       rescue SSHKit::Runner::ExecuteError => e
         bailout(e.message)
@@ -46,14 +45,6 @@ module Supervisor
           end
         end
         Supervisor::App::Services::Supervisor.new(host, settings).run
-      end
-
-      def post_cleanup
-        on @host do
-          as :root do
-            execute :rm, '-rf', '/tmp/supervisor_hooks'
-          end
-        end
       end
     end
   end
