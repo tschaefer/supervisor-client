@@ -18,9 +18,8 @@ module Supervisor
 
         def run
           ::Supervisor::App::Services::Hook.new(@host, @settings, 'pre-traefik').run
-          ensure_network
 
-          command = docker_command
+          command = command()
           on @host do
             as :root do
               execute :mkdir, '-p', '/var/lib/traefik'
@@ -33,7 +32,7 @@ module Supervisor
 
         private
 
-        def docker_command
+        def command
           command = %w[
             run --detach --restart always
             --name traefik
@@ -41,19 +40,11 @@ module Supervisor
             --volume /var/lib/traefik:/etc/traefik
             --publish 80:80 --publish 443:443
           ]
-          command += labels
           command += env
           command += ['traefik:v3.2.1']
           command += args
 
           command
-        end
-
-        def labels
-          labels = {}
-          labels.merge!(@settings.deploy&.traefik&.labels || {})
-
-          argumentize(labels, prefix: '--label ')
         end
 
         def args

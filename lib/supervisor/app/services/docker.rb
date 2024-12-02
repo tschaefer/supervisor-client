@@ -23,10 +23,13 @@ module Supervisor
                   exit 1
                 end
               else
-                within '/tmp' do
+                tmdir = capture :mktemp, '--directory'
+                within tmdir do
                   execute :curl, '-fsSL', 'https://get.docker.com', '-o', 'get-docker.sh'
                   execute :sh, 'get-docker.sh'
+                  execute :rm, 'get-docker.sh'
                 end
+                execute :rm, '-rf', tmdir
               end
             end
           end

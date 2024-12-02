@@ -19,9 +19,8 @@ module Supervisor
 
         def run
           ::Supervisor::App::Services::Hook.new(@host, @settings, 'pre-supervisor').run
-          ensure_network
 
-          command = docker_command
+          command = command()
           on @host do
             as :root do
               execute :mkdir, '-p', '/var/lib/supervisor'
@@ -35,7 +34,7 @@ module Supervisor
 
         private
 
-        def docker_command
+        def command
           command = %w[
             run --detach --restart always
             --name supervisor
@@ -66,7 +65,7 @@ module Supervisor
 
         def env
           env = {
-            'SECRET_KEY_BASE' => SecureRandom.hex(16),
+            'SECRET_KEY_BASE' => SecureRandom.hex(48),
             'SUPERVISOR_API_KEY' => @settings.api.token
           }
           env.merge!(@settings.deploy&.supervisor&.env || {})
