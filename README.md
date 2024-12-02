@@ -73,13 +73,14 @@ actions.
 
 ### Configuration
 
-Before using the CLI, configure the Supervisor base URL and API key by
+Before using the CLI, configure the Supervisor base URI and API token by
 creating a configuration file at `~/.supervisor`:
 
 ```yaml
 ---
-base_url: https://supervisor.example.com
-api_key: 8db7fde4-6a11-462e-ba27-6897b7c9281b
+api:
+    uri: https://supervisor.example.com
+    token: 8db7fde4-6a11-462e-ba27-6897b7c9281b
 ```
 
 ### Command Reference
@@ -95,6 +96,22 @@ supervisor is-healthy
 ```
 
 Checks the health of the Supervisor service.
+
+### Deployment Management
+
+The command `deploy` installs and sets up a containerized Supervisor service
+on a vanilla Linux machine by provisioning the docker service and
+deploying a reverse proxy [Traefik](https://traefik.io/) for TLS termination.
+
+Prerequisites are super-user privileges, a valid DNS record for the
+Supervisor service and the above mentioned configuration file.
+
+While setup the necessary certificate is requested from
+[Let's Encrypt](https://letsencrypt.org/) via HTTP-challenge.
+
+```bash
+supervisor deploy --host machine.example.com
+```
 
 ### Stack Management
 
