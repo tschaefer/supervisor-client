@@ -33,7 +33,10 @@ module Supervisor
               end
             end
           end
+          run_post_hook
+        end
 
+        def run_post_hook
           ::Supervisor::App::Services::Hook.new(@host, @settings, 'post-docker-setup').run
         end
       end
