@@ -165,13 +165,20 @@ Custom `hooks` scripts can be run before and after certain deployment steps.
 * pre-supervisor-deploy
 * post-supervisor-deploy
 
-The hook filename must be the hook name without any extension.
-
-The path to the hooks directory can be configured in the root under `hooks`.
+The hook filename must be the hook name without any extension. The path to the
+hooks directory can be configured in the root under `hooks`.
 
 ```yaml
 hooks: /path/to/hooks
 ```
+
+The Supervisor service can be redeployed with the command `redeploy`.
+
+```bash
+supervisor redeploy --host machine.example.com
+```
+
+Optionally, Traefik can be redeployed with the option `--with-traefik`.
 
 ### Stack Management
 
