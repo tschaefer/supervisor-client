@@ -13,8 +13,7 @@ module Supervisor
       option ['--with-traefik'], :flag, 'redeploy Traefik'
 
       def execute
-        SSHKit.config.use_format verbose? ? :pretty : :dot
-        @host = SSHKit::Host.new(host)
+        setup_sshkit
 
         Supervisor::App::Services::Prerequisites.new(@host, settings).run
         redeploy_traefik
@@ -25,6 +24,13 @@ module Supervisor
       end
 
       private
+
+      def setup_sshkit
+        SSHKit.config.use_format verbose? ? :pretty : :dot
+
+        effective_host = host == 'localhost' ? :local : host
+        @host = SSHKit::Host.new(effective_host)
+      end
 
       def redeploy_traefik
         return unless with_traefik?

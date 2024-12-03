@@ -16,12 +16,12 @@ module Supervisor
 
         def run
           on @host do
-            unless test '[ "${EUID:-$(id -u)}" -eq 0 ] || command -v sudo || command -v su'
+            unless test '/bin/sh -c [ "${EUID:-$(id -u)}" -eq 0 ] || command -v sudo || command -v su'
               error "You need to be root or have sudo installed on #{@host}"
               exit 1
             end
 
-            unless test 'command -v curl'
+            unless test '/bin/sh -c command -v curl'
               error "You need to have curl installed on #{@host}"
               exit 1
             end

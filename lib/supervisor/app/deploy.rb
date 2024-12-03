@@ -14,8 +14,7 @@ module Supervisor
       option ['--verbose'], :flag, 'show SSHKit output'
 
       def execute
-        SSHKit.config.use_format verbose? ? :pretty : :dot
-        @host = SSHKit::Host.new(host)
+        setup_sshkit
 
         Supervisor::App::Services::Prerequisites.new(host, settings).run
         setup_docker
@@ -27,6 +26,13 @@ module Supervisor
       end
 
       private
+
+      def setup_sshkit
+        SSHKit.config.use_format verbose? ? :pretty : :dot
+
+        effective_host = host == 'localhost' ? :local : host
+        @host = SSHKit::Host.new(effective_host)
+      end
 
       def setup_docker
         return if skip_docker?
