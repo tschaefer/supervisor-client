@@ -103,11 +103,48 @@ The command `deploy` installs and sets up a containerized Supervisor service
 on a vanilla Linux machine by provisioning the docker service and
 deploying the application proxy [Traefik](https://traefik.io/).
 
+#### Default Traefik docker command
+
+```bash
+docker run \
+    --detach --restart always --name traefik \
+    --volume /var/run/docker.sock:/var/run/docker.sock \
+    --volume /var/lib/traefik:/etc/traefik \
+    --network supervisor \
+    --publish 80:80 --publish 443:443 \
+    traefik:v3.2.1 \
+    --providers.docker.exposedbydefault="false" \
+    --entrypoints.web.address=":80" \
+    --entrypoints.websecure.address=":443" \
+    --certificatesresolvers.letsencrypt.acme.email="acme@supervisor.example" \
+    --certificatesresolvers.letsencrypt.acme.storage="/etc/traefik/certs.d/acme.json" \
+    --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint="web"
+```
+
+#### Default Supervisor docker command
+
+```bash
+docker run \
+    --detach --restart always --name supervisor \
+    --volume /var/run/docker.sock:/var/run/docker.sock \
+    --volume /var/lib/supervisor:/rails/storage \
+    --network supervisor \
+    --label traefik.enable="true" \
+    --label traefik.http.routers.supervisor.tls="true" \
+    --label traefik.http.routers.supervisor.tls.certresolver="letsencrypt" \
+    --label traefik.http.routers.supervisor.rule="Host(\"supervisor.example.com\")" \
+    --label traefik.http.routers.supervisor.entrypoints="websecure" \
+    --env SECRET_KEY_BASE="601f72235d8ea11db69e678f9...1a" \
+    --env SUPERVISOR_API_KEY="8db7fde4-6a11-462e-ba27-6897b7c9281b" \
+    ghcr.io/tschaefer/supervisor:main
+```
+
 Prerequisites are super-user privileges, a valid DNS record for the
 Supervisor service and the above mentioned configuration file.
 
 While setup the necessary certificate is requested from
 [Let's Encrypt](https://letsencrypt.org/) via HTTP-challenge.
+
 
 ```bash
 supervisor deploy --host root@machine.example.com
@@ -129,14 +166,13 @@ deploy:
         #
         # Additional arguments to pass to the Traefik container
         args:
-            accesslog.format: json
-            accesslog.addinternals: true
-            accesslog.filters.statuscodes: 400-599
+            configfile: /etc/traefik/traefik.yml
         # Environment variables
         #
         # Additional environment variables to pass to the Traefik container
         env:
-            ...
+            CF_API_EMAIL: cloudflare@example.com
+            CF_DNS_API_TOKEN: YSsfAH-d1q57j2D7T41ptAfM
     # Supervisor settings
     #
     supervisor:
@@ -144,17 +180,11 @@ deploy:
         #
         # Additional labels to apply to the Supervisor container
         labels:
-            ...
-        # Arguments
-        #
-        # Additional arguments to pass to the Supervisor container
-        args:
-            ...
+            traefik.http.routers.supervisor.tls.certresolver: cloudflare
         # Environment variables
         #
         # Additional environment variables to pass to the Supervisor container
-        env:
-            ...
+        env: {}
 ```
 
 Custom `hooks` scripts can be run before and after certain deployment steps.
@@ -164,6 +194,25 @@ Custom `hooks` scripts can be run before and after certain deployment steps.
 * post-traefik-deploy
 * pre-supervisor-deploy
 * post-supervisor-deploy
+
+**Example**:
+
+```bash
+#!/usr/bin/env sh
+
+# pre-traefik-deploy hook script
+
+cat <<EOF> /var/lib/traefik/traefik.yml
+---
+certificatesresolvers:
+  cloudflare:
+    acme:
+      email: acme@example.com
+      storage: /etc/traefik/certs.d/cloudflare.json
+      dnschallenge:
+        provider: cloudflare
+EOF
+```
 
 The hook filename must be the hook name without any extension. The path to the
 hooks directory can be configured in the root under `hooks`.
