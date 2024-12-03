@@ -26,6 +26,7 @@ module Supervisor
       private
 
       def setup_sshkit
+        SSHKit.config.output_verbosity = Logger::DEBUG if %w[true yes 1].include?(ENV['SUPERVISOR_CLIENT_DEBUG'])
         SSHKit.config.use_format verbose? ? :pretty : :dot
 
         effective_host = host == 'localhost' ? :local : host

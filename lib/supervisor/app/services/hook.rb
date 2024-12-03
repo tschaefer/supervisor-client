@@ -25,20 +25,23 @@ module Supervisor
         private
 
         def execute_hook
-          file = File.open(hook_file)
+          file = hook_file
           hook = @hook
 
           on @host do
-            as :root do
-              tmpdir = capture :mktemp, '--directory'
-              upload! file, "#{tmpdir}/hook"
-              succeeded = execute '/bin/sh', '-c', "#{tmpdir}/hook", raise_on_non_zero_exit: false
-              execute :rm, '-rf', tmpdir
+            tmpdir = capture :mktemp, '--directory'
+            upload! file, "#{tmpdir}/hook"
 
-              unless succeeded
-                error "Hook #{hook} failed"
-                exit 1
-              end
+            succeeded = false
+            as :root do
+              succeeded = execute "#{tmpdir}/hook", raise_on_non_zero_exit: false
+            end
+
+            execute :rm, '-rf', tmpdir
+
+            unless succeeded
+              error "Hook #{hook} failed"
+              exit 1
             end
           end
         end
