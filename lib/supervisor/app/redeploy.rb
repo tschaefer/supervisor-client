@@ -14,10 +14,10 @@ module Supervisor
 
       def execute
         setup_sshkit
-
-        Supervisor::App::Services::Prerequisites.new(@host, settings).run
+        check_prerequisites
         redeploy_traefik
         redeploy_supervisor
+
         puts unless verbose?
       rescue SSHKit::Runner::ExecuteError => e
         bailout(e.message)
@@ -31,6 +31,10 @@ module Supervisor
 
         effective_host = host == 'localhost' ? :local : host
         @host = SSHKit::Host.new(effective_host)
+      end
+
+      def check_prerequisites
+        Supervisor::App::Services::Prerequisites.new(host, settings).run
       end
 
       def redeploy_traefik

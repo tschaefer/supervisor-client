@@ -15,11 +15,11 @@ module Supervisor
 
       def execute
         setup_sshkit
-
-        Supervisor::App::Services::Prerequisites.new(host, settings).run
+        check_prerequisites
         setup_docker
         deploy_traefik
-        Supervisor::App::Services::Supervisor.new(host, settings).run
+        deploy_supervisor
+
         puts unless verbose?
       rescue SSHKit::Runner::ExecuteError => e
         bailout(e.message)
@@ -34,6 +34,10 @@ module Supervisor
         @host = SSHKit::Host.new(effective_host)
       end
 
+      def check_prerequisites
+        Supervisor::App::Services::Prerequisites.new(host, settings).run
+      end
+
       def setup_docker
         return if skip_docker?
 
@@ -44,6 +48,10 @@ module Supervisor
         return if skip_traefik?
 
         Supervisor::App::Services::Traefik.new(host, settings).run
+      end
+
+      def deploy_supervisor
+        Supervisor::App::Services::Supervisor.new(host, settings).run
       end
     end
   end

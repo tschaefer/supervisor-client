@@ -18,9 +18,16 @@ module Supervisor
         end
 
         def run
-          ::Supervisor::App::Services::Hook.new(@host, @settings, 'pre-supervisor-deploy').run
+          run_pre_hook
+          ensure_network
+          run_command
+          run_post_hook
+        end
 
-          command = command()
+        private
+
+        def run_command
+          command = build_command
           on @host do
             as :root do
               execute :mkdir, '-p', '/var/lib/supervisor'
@@ -28,27 +35,47 @@ module Supervisor
               execute :docker, *command
             end
           end
+        end
 
+        def run_pre_hook
+          ::Supervisor::App::Services::Hook.new(@host, @settings, 'pre-supervisor-deploy').run
+        end
+
+        def run_post_hook
           ::Supervisor::App::Services::Hook.new(@host, @settings, 'post-supervisor-deploy').run
         end
 
-        private
+        def ensure_network
+          command = %w[
+            network create
+            --attachable --ipv6
+            --driver bridge --opt com.docker.network.container_iface_prefix=supervisor
+            supervisor
+          ]
 
-        def command
+          on @host do
+            as :root do
+              execute :docker, *command unless test :docker, 'network', 'inspect', 'supervisor'
+            end
+          end
+        end
+
+        def build_command
           command = %w[
             run --detach --restart always
             --name supervisor
             --volume /var/run/docker.sock:/var/run/docker.sock
             --volume /var/lib/supervisor:/rails/storage
+            --network supervisor
           ]
-          command += labels
-          command += env
+          command += build_labels
+          command += build_env
           command += ['ghcr.io/tschaefer/supervisor:main']
 
           command
         end
 
-        def labels
+        def build_labels
           rule = "Host(\\\"#{URI.parse(@settings.api.uri).host}\\\")"
 
           labels = {
@@ -63,7 +90,7 @@ module Supervisor
           argumentize(labels, prefix: '--label ')
         end
 
-        def env
+        def build_env
           env = {
             'SECRET_KEY_BASE' => SecureRandom.hex(48),
             'SUPERVISOR_API_KEY' => @settings.api.token
