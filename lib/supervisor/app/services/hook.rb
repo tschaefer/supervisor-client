@@ -16,7 +16,7 @@ module Supervisor
         end
 
         def run
-          return unless @settings.deploy&.hooks_path&.presence
+          return unless @settings.deploy&.hooks&.presence
           return unless hook_exist?
 
           execute_hook
@@ -48,7 +48,7 @@ module Supervisor
         end
 
         def hook_file
-          File.join(@settings.deploy.hooks_path, @hook)
+          File.join(@settings.deploy.hooks, @hook)
         end
       end
     end

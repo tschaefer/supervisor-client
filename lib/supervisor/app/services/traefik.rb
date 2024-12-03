@@ -17,7 +17,7 @@ module Supervisor
         end
 
         def run
-          ::Supervisor::App::Services::Hook.new(@host, @settings, 'pre-traefik').run
+          ::Supervisor::App::Services::Hook.new(@host, @settings, 'pre-traefik-deploy').run
 
           command = command()
           on @host do
@@ -27,7 +27,7 @@ module Supervisor
             end
           end
 
-          ::Supervisor::App::Services::Hook.new(@host, @settings, 'post-traefik').run
+          ::Supervisor::App::Services::Hook.new(@host, @settings, 'post-traefik-deploy').run
         end
 
         private

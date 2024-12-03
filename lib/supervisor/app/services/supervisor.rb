@@ -18,7 +18,7 @@ module Supervisor
         end
 
         def run
-          ::Supervisor::App::Services::Hook.new(@host, @settings, 'pre-supervisor').run
+          ::Supervisor::App::Services::Hook.new(@host, @settings, 'pre-supervisor-deploy').run
 
           command = command()
           on @host do
@@ -29,7 +29,7 @@ module Supervisor
             end
           end
 
-          ::Supervisor::App::Services::Hook.new(@host, @settings, 'post-supervisor').run
+          ::Supervisor::App::Services::Hook.new(@host, @settings, 'post-supervisor-deploy').run
         end
 
         private

@@ -101,7 +101,7 @@ Checks the health of the Supervisor service.
 
 The command `deploy` installs and sets up a containerized Supervisor service
 on a vanilla Linux machine by provisioning the docker service and
-deploying a reverse proxy [Traefik](https://traefik.io/) for TLS termination.
+deploying the application proxy [Traefik](https://traefik.io/).
 
 Prerequisites are super-user privileges, a valid DNS record for the
 Supervisor service and the above mentioned configuration file.
@@ -110,7 +110,67 @@ While setup the necessary certificate is requested from
 [Let's Encrypt](https://letsencrypt.org/) via HTTP-challenge.
 
 ```bash
-supervisor deploy --host machine.example.com
+supervisor deploy --host root@machine.example.com
+```
+
+The provisioning of docker can be skipped wit the option `--skip-docker` as
+well as the installation of Traefik with the option `--skip-traefik`. For a
+more informative output use `--verbose` - beware, sensible information will be
+exposed.
+
+The deployment is customizable by configuration in the root under `deploy`.
+
+```yaml
+deploy:
+    # Traefik settings
+    #
+    traefik:
+        # Arguments
+        #
+        # Additional arguments to pass to the Traefik container
+        args:
+            accesslog.format: json
+            accesslog.addinternals: true
+            accesslog.filters.statuscodes: 400-599
+        # Environment variables
+        #
+        # Additional environment variables to pass to the Traefik container
+        env:
+            ...
+    # Supervisor settings
+    #
+    supervisor:
+        # Labels
+        #
+        # Additional labels to apply to the Supervisor container
+        labels:
+            ...
+        # Arguments
+        #
+        # Additional arguments to pass to the Supervisor container
+        args:
+            ...
+        # Environment variables
+        #
+        # Additional environment variables to pass to the Supervisor container
+        env:
+            ...
+```
+
+Custom `hooks` scripts can be run before and after certain deployment steps.
+
+* post-docker-setup
+* pre-traefik-deploy
+* post-traefik-deploy
+* pre-supervisor-deploy
+* post-supervisor-deploy
+
+The hook filename must be the hook name without any extension.
+
+The path to the hooks directory can be configured in the root under `hooks`.
+
+```yaml
+hooks: /path/to/hooks
 ```
 
 ### Stack Management

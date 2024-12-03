@@ -34,7 +34,7 @@ module Supervisor
             end
           end
 
-          ::Supervisor::App::Services::Hook.new(@host, @settings, 'docker-setup').run
+          ::Supervisor::App::Services::Hook.new(@host, @settings, 'post-docker-setup').run
         end
       end
     end
