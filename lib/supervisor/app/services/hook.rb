@@ -30,11 +30,12 @@ module Supervisor
 
           on @host do
             tmpdir = capture :mktemp, '--directory'
-            upload! file, "#{tmpdir}/hook"
+            script = "#{tmpdir}/#{SecureRandom.uuid}"
+            upload! file, script
 
             succeeded = false
             as :root do
-              succeeded = execute "#{tmpdir}/hook", raise_on_non_zero_exit: false
+              succeeded = execute script, raise_on_non_zero_exit: false
             end
 
             execute :rm, '-rf', tmpdir
