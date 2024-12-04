@@ -54,10 +54,14 @@ module Supervisor
             --publish 80:80 --publish 443:443
           ]
           command += build_env
-          command += ['traefik:v3.2.1']
+          command += [set_image]
           command += build_args
 
           command
+        end
+
+        def set_image
+          @settings.deploy&.traefik&.image || 'traefik:v3.2.1'
         end
 
         def build_args

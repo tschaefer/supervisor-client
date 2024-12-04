@@ -56,9 +56,13 @@ module Supervisor
           ]
           command += build_labels
           command += build_env
-          command += ['ghcr.io/tschaefer/supervisor:main']
+          command += [set_image]
 
           command
+        end
+
+        def set_image
+          @settings.deploy&.supervisor&.image || 'ghcr.io/tschaefer/supervisor:main'
         end
 
         def build_labels

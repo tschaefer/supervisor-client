@@ -162,25 +162,38 @@ deploy:
     # Traefik settings
     #
     traefik:
+        # Image
+        #
+        # The Traefik image to use, defaults to traefik:v3.2.1
+        image: traefik:v3.2.0
+
         # Arguments
         #
         # Additional arguments to pass to the Traefik container
         args:
             configfile: /etc/traefik/traefik.yml
+
         # Environment variables
         #
         # Additional environment variables to pass to the Traefik container
         env:
             CF_API_EMAIL: cloudflare@example.com
             CF_DNS_API_TOKEN: YSsfAH-d1q57j2D7T41ptAfM
+
     # Supervisor settings
     #
     supervisor:
+        # Image
+        #
+        # The Supervisor image to use, defaults to ghcr.io/tschaefer/supervisor:main
+        image: ghcr.io/tschaefer/supervisor:latest
+
         # Labels
         #
         # Additional labels to apply to the Supervisor container
         labels:
             traefik.http.routers.supervisor.tls.certresolver: cloudflare
+
         # Environment variables
         #
         # Additional environment variables to pass to the Supervisor container
