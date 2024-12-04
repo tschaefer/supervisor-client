@@ -7,6 +7,7 @@ module Supervisor
   module App
     class Redeploy < Supervisor::App::Base
       include SSHKit::DSL
+      include Supervisor::App::PreparesSSHKit
 
       option ['--host'], 'HOST', 'the host to redeploy to', required: true
       option ['--verbose'], :flag, 'show SSHKit output'
@@ -24,14 +25,6 @@ module Supervisor
       end
 
       private
-
-      def setup_sshkit
-        SSHKit.config.output_verbosity = Logger::DEBUG if %w[true yes 1].include?(ENV['SUPERVISOR_CLIENT_DEBUG'])
-        SSHKit.config.use_format verbose? ? :pretty : :dot
-
-        effective_host = host == 'localhost' ? :local : host
-        @host = SSHKit::Host.new(effective_host)
-      end
 
       def check_prerequisites
         Supervisor::App::Services::Prerequisites.new(host, settings).run

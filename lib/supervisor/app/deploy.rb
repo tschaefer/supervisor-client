@@ -7,6 +7,7 @@ module Supervisor
   module App
     class Deploy < Supervisor::App::Base
       include SSHKit::DSL
+      include Supervisor::App::PreparesSSHKit
 
       option ['--host'], 'HOST', 'the host to deploy to', required: true
       option ['--skip-docker'], :flag, 'skip Docker installation'
@@ -26,13 +27,6 @@ module Supervisor
       end
 
       private
-
-      def setup_sshkit
-        SSHKit.config.use_format verbose? ? :pretty : :dot
-
-        effective_host = host == 'localhost' ? :local : host
-        @host = SSHKit::Host.new(effective_host)
-      end
 
       def check_prerequisites
         Supervisor::App::Services::Prerequisites.new(host, settings).run

@@ -8,6 +8,7 @@ module Supervisor
     module Services
       class Traefik
         include SSHKit::DSL
+        include ::Supervisor::App::Services::EnsuresNetwork
 
         delegate :argumentize, to: ::Supervisor::App::Services::Utils
 
@@ -41,21 +42,6 @@ module Supervisor
 
         def run_post_hook
           ::Supervisor::App::Services::Hook.new(@host, @settings, 'post-traefik-deploy').run
-        end
-
-        def ensure_network
-          command = %w[
-            network create
-            --attachable --ipv6
-            --driver bridge --opt com.docker.network.container_iface_prefix=supervisor
-            supervisor
-          ]
-
-          on @host do
-            as :root do
-              execute :docker, *command unless test :docker, 'network', 'inspect', 'supervisor'
-            end
-          end
         end
 
         def build_command
