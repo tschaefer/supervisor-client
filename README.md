@@ -144,8 +144,8 @@ docker run \
 ```bash
 docker network create \
     --attachable true \
-    --ipv6 true \
-    --driver bridge \
+    --ipv6=true \
+    --driver=bridge \
     --opt com.docker.network.container_iface_prefix=supervisor
     supervisor
 ```
@@ -170,69 +170,53 @@ The deployment is customizable by configuration in the root under `deploy`.
 
 ```yaml
 deploy:
+
     # Network settings
-    #
     network:
-        # Name
-        #
+
         # The name of the network to create, defaults to supervisor
         name: supervisor
-
-        # Options
-        #
         # Additional options to pass to the network create command
         options:
             ipv6: false
             opt: com.docker.network.driver.mtu=1500
 
     # Traefik settings
-    #
     traefik:
-        # Image
-        #
+
         # The Traefik image to use, defaults to traefik:v3.2.1
         image: traefik:v3.2.0
 
-        # Arguments
-        #
         # Additional arguments to pass to the Traefik container
         args:
             configfile: /etc/traefik/traefik.yml
 
-        # Environment variables
-        #
         # Additional environment variables to pass to the Traefik container
         env:
             CF_API_EMAIL: cloudflare@example.com
             CF_DNS_API_TOKEN: YSsfAH-d1q57j2D7T41ptAfM
 
     # Supervisor settings
-    #
     supervisor:
-        # Image
-        #
+
         # The Supervisor image to use, defaults to ghcr.io/tschaefer/supervisor:main
         image: ghcr.io/tschaefer/supervisor:latest
 
-        # Labels
-        #
         # Additional labels to apply to the Supervisor container
         labels:
             traefik.http.routers.supervisor.tls.certresolver: cloudflare
 
-        # Environment variables
-        #
         # Additional environment variables to pass to the Supervisor container
         env: {}
 ```
 
 Custom `hooks` scripts can be run before and after certain deployment steps.
 
-* post-docker-setup
-* pre-traefik-deploy
-* post-traefik-deploy
-* pre-supervisor-deploy
-* post-supervisor-deploy
+* `post-docker-setup`
+* `pre-traefik-deploy`
+* `post-traefik-deploy`
+* `pre-supervisor-deploy`
+* `post-supervisor-deploy`
 
 **Example**:
 
