@@ -52,8 +52,8 @@ module Supervisor
             --name supervisor
             --volume /var/run/docker.sock:/var/run/docker.sock
             --volume /var/lib/supervisor:/rails/storage
-            --network supervisor
           ]
+          command += ['--network', network_name]
           command += build_labels
           command += build_env
           command += [set_image]

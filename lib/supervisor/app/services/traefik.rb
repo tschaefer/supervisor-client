@@ -50,9 +50,9 @@ module Supervisor
             --name traefik
             --volume /var/run/docker.sock:/var/run/docker.sock
             --volume /var/lib/traefik:/etc/traefik
-            --network supervisor
             --publish 80:80 --publish 443:443
           ]
+          command += ['--network', network_name]
           command += build_env
           command += [set_image]
           command += build_args

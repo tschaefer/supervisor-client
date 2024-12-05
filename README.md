@@ -139,6 +139,17 @@ docker run \
     ghcr.io/tschaefer/supervisor:main
 ```
 
+#### Default docker network command
+
+```bash
+docker network create \
+    --attachable true \
+    --ipv6 true \
+    --driver bridge \
+    --opt com.docker.network.container_iface_prefix=supervisor
+    supervisor
+```
+
 Prerequisites are super-user privileges, a valid DNS record for the
 Supervisor service and the above mentioned configuration file.
 
@@ -159,6 +170,21 @@ The deployment is customizable by configuration in the root under `deploy`.
 
 ```yaml
 deploy:
+    # Network settings
+    #
+    network:
+        # Name
+        #
+        # The name of the network to create, defaults to supervisor
+        name: supervisor
+
+        # Options
+        #
+        # Additional options to pass to the network create command
+        options:
+            ipv6: false
+            opt: com.docker.network.driver.mtu=1500
+
     # Traefik settings
     #
     traefik:
