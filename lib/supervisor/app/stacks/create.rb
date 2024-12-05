@@ -4,7 +4,7 @@ module Supervisor
   module App
     module Stacks
       class Create < Supervisor::App::Base
-        include Supervisor::App::Stacks::Concerns::Manifest
+        include Supervisor::App::Stacks::HandlesManifest
 
         option ['--manifest-file'], 'FILE', 'manifest file', required: true, attribute_name: :file
         option ['--decrypt'], :flag, 'decrypt manifest values using sops'
