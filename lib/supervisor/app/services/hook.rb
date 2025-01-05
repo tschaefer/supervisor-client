@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'sshkit'
-require 'sshkit/dsl'
-
 module Supervisor
   module App
     module Services

@@ -8,6 +8,7 @@ module Supervisor
       subcommand 'deploy', 'Deploy the Supervisor service with stack', Supervisor::App::Deploy
       subcommand 'redeploy', 'Redeploy the Supervisor service', Supervisor::App::Redeploy
       subcommand 'is-healthy', 'Check the health of the Supervisor service', Supervisor::App::Health
+      subcommand 'dashboard', 'Show Supervisor service dashboard URL', Supervisor::App::Dashboard
       subcommand 'stacks', 'Manage stacks' do
         subcommand 'list', 'List all stacks', Supervisor::App::Stacks::List
         subcommand 'show', 'Show a stack', Supervisor::App::Stacks::Show

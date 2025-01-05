@@ -42,9 +42,10 @@ module Supervisor
       end
 
       def redeploy_supervisor
+        image = settings&.dig(:deploy, :supervisor, :image) || 'ghcr.io/tschaefer/supervisor:main'
         on @host do
           as :root do
-            execute :docker, 'pull', 'ghcr.io/tschaefer/supervisor:main'
+            execute :docker, 'pull', image
             execute :docker, 'rm', '--force', 'supervisor'
           end
         end

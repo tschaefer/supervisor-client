@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'securerandom'
-require 'sshkit'
-require 'sshkit/dsl'
-
 module Supervisor
   module App
     module Services
@@ -82,7 +78,6 @@ module Supervisor
 
         def build_env
           env = {
-            'SECRET_KEY_BASE' => SecureRandom.hex(48),
             'SUPERVISOR_API_KEY' => @settings.api.token
           }
           env.merge!(@settings.deploy&.supervisor&.env || {})

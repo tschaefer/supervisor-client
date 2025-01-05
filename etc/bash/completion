@@ -273,6 +273,31 @@ _supervisor_redeploy() {
     fi
 }
 
+_supervisor_dashboard() {
+    local cur prev
+    _get_comp_words_by_ref -n : cur prev
+
+    local options='--help'
+    local options_dashboard='--open'
+
+    options="${options} ${options_dashboard}"
+
+    case "$prev" in
+        --help)
+            return
+            ;;
+        --open)
+            return
+            ;;
+    esac
+
+    if [[ "$cur" == -* ]]; then
+        mapfile -t COMPREPLY < <(compgen -W "$options" -- "$cur")
+        return
+    fi
+}
+
+
 _supervisor_stacks() {
     local cur prev words
     _get_comp_words_by_ref -n : cur prev words
@@ -336,7 +361,7 @@ _supervisor() {
     local cur prev words
     _get_comp_words_by_ref -n : cur prev words
 
-    local actions="redeploy deploy is-healthy stacks"
+    local actions="dashboard redeploy deploy is-healthy stacks"
     local options='--help --man --version'
     local options_config='--configuration-file'
 
@@ -345,6 +370,10 @@ _supervisor() {
     local word
     for word in "${words[@]}"; do
         case $word in
+            dashboard)
+                _supervisor_dashboard
+                return
+                ;;
             deploy)
                 _supervisor_deploy
                 return
