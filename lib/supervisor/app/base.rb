@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require 'clamp'
+require 'hashie'
 require 'pastel'
+
 require 'tty-screen'
 require 'tty-table'
 require 'tty-pager'
@@ -55,7 +57,7 @@ module Supervisor
         result = filter_secrets(result) if defined?(unfiltered?) && !unfiltered?
 
         if defined?(json?) && json?
-          puts result.to_json
+          puts JSON.pretty_generate(result)
           exit 0
         end
 
@@ -64,13 +66,19 @@ module Supervisor
         bailout(e.message)
       end
 
-      def configure
-        cfgfile = @cfgfile.presence || File.join(Dir.home, '.supervisor')
-        settings = File.readable?(cfgfile) ? YAML.load_file(cfgfile) : {}
+      def settings
+        return @settings if defined?(@settings)
 
+        cfgfile = @cfgfile.presence || File.join(Dir.home, '.supervisor')
+        settings = File.readable?(cfgfile) ? YAML.load_file(cfgfile) : bailout('No configuration file found')
+
+        @settings = Hashie::Mash.new(settings)
+      end
+
+      def configure
         Supervisor.configure do |config|
-          config.base_uri = ENV.fetch('SUPERVISOR_BASE_URI', settings['base_uri']) || bailout('No base URI configured')
-          config.api_key = ENV.fetch('SUPERVISOR_API_KEY', settings['api_key']) || bailout('No API key configured')
+          config.base_uri = settings.api.uri   || bailout('No base URI configured')
+          config.api_key  = settings.api.token || bailout('No API key configured')
         end
       end
 

@@ -1,8 +1,17 @@
 # frozen_string_literal: true
 
+require 'active_support'
+require 'active_support/core_ext'
+
 require 'zeitwerk'
 
 loader = Zeitwerk::Loader.for_gem
+loader.inflector.inflect 'prepares_sshkit' => 'PreparesSSHKit'
+Dir.glob(File.join(__dir__, '/**/*/')).each do |dir|
+  next unless dir.ends_with?('/concerns/')
+
+  loader.collapse(dir)
+end
 loader.setup
 
 module Supervisor
@@ -17,7 +26,7 @@ module Supervisor
     end
 
     def configured?
-      @client ? true : false
+      defined?(@client)
     end
 
     def configured!

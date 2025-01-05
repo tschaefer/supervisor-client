@@ -30,9 +30,11 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport', '~> 8.0.0'
   spec.add_dependency 'clamp', '~> 1.3.2'
+  spec.add_dependency 'erb', '~> 4.0.3'
   spec.add_dependency 'hashie', '~> 5.0'
   spec.add_dependency 'httparty', '~> 0.22'
   spec.add_dependency 'pastel', '~> 0.8.0'
+  spec.add_dependency 'sshkit', '~> 1.23.2'
   spec.add_dependency 'tty-pager', '~> 0.14.0'
   spec.add_dependency 'tty-screen', '~> 0.8.2'
   spec.add_dependency 'tty-table', '~> 0.12.0'

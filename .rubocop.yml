@@ -15,12 +15,15 @@ Style/Documentation:
 Metrics/AbcSize:
   CountRepeatedAttributes: false
 
+Metrics/BlockLength:
+  Max: 30
+
 Metrics/MethodLength:
   CountAsOne:
     - 'array'
     - 'hash'
     - 'heredoc'
-  Max: 25
+  Max: 30
 
 RSpec/ExampleLength:
   CountAsOne:

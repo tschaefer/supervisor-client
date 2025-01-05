@@ -4,7 +4,7 @@ module Supervisor
   module App
     module Stacks
       class Update < Supervisor::App::Base
-        include Supervisor::App::Stacks::Concerns::Manifest
+        include Supervisor::App::Stacks::HandlesManifest
 
         parameter 'STACK_UUID', 'the UUID of the stack to update'
 
