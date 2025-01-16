@@ -21,6 +21,8 @@ module Supervisor
                 end
               else
                 tmdir = capture :mktemp, '--directory'
+                # https://github.com/capistrano/sshkit/issues/373
+                execute :chmod, '777', tmdir
                 within tmdir do
                   execute :curl, '-fsSL', 'https://get.docker.com', '-o', 'get-docker.sh'
                   execute :sh, 'get-docker.sh'
