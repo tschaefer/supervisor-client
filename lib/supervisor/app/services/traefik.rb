@@ -58,7 +58,7 @@ module Supervisor
         end
 
         def set_image
-          @settings.deploy&.traefik&.image || 'traefik:v3.2.1'
+          @settings.deploy&.traefik&.image || 'traefik:v3.2.2'
         end
 
         def build_args
