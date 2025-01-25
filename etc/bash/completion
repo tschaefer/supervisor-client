@@ -165,7 +165,7 @@ _supervisor_stack_control() {
     _get_comp_words_by_ref -n : cur prev words
 
     local options='--help --command'
-    local actions='start stop restart redeploy'
+    local actions='start stop restart redeploy pause unpause'
 
     case "$prev" in
         --command)
