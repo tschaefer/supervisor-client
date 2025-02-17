@@ -49,6 +49,7 @@ module Supervisor
             --volume /var/lib/traefik:/etc/traefik
             --publish 80:80 --publish 443:443
           ]
+          command += build_options
           command += ['--network', network_name]
           command += build_env
           command += [set_image]
@@ -82,6 +83,13 @@ module Supervisor
           env.merge!(@settings.deploy&.traefik&.env || {})
 
           argumentize(env, prefix: '--env ')
+        end
+
+        def build_options
+          options = {}
+          options.merge!(@settings.deploy&.traefik&.options || {})
+
+          argumentize(options, prefix: '--')
         end
       end
     end

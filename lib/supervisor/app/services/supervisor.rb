@@ -49,6 +49,7 @@ module Supervisor
             --volume /var/run/docker.sock:/var/run/docker.sock
             --volume /var/lib/supervisor:/rails/storage
           ]
+          command += build_options
           command += ['--network', network_name]
           command += build_labels
           command += build_env
@@ -83,6 +84,13 @@ module Supervisor
           env.merge!(@settings.deploy&.supervisor&.env || {})
 
           argumentize(env, prefix: '--env ')
+        end
+
+        def build_options
+          options = {}
+          options.merge!(@settings.deploy&.supervisor&.options || {})
+
+          argumentize(options, prefix: '--')
         end
       end
     end

@@ -187,6 +187,10 @@ deploy:
         # The Traefik image to use, defaults to traefik:v3.2.1
         image: traefik:v3.2.0
 
+        # Additional docker container command options
+        options:
+            publish: 8888:8888
+
         # Additional arguments to pass to the Traefik container
         args:
             configfile: /etc/traefik/traefik.yml
