@@ -20,10 +20,10 @@ gem 'rake', '~> 13.2.1'
 gem 'rspec', '~> 3.13.0'
 
 # linting
-gem 'rubocop', '~> 1.71.0'
-gem 'rubocop-rake', '~> 0.6.0'
-gem 'rubocop-rspec', '~> 3.4.0'
+gem 'rubocop', '~> 1.72.1'
+gem 'rubocop-rake', '~> 0.7.1'
+gem 'rubocop-rspec', '~> 3.5.0'
 gem 'webmock', '~> 3.25.0'
 
 # git
-gem 'overcommit', '~> 0.66.0'
+gem 'overcommit', '~> 0.67.0'
