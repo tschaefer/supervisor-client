@@ -202,6 +202,8 @@ deploy:
 
     # Supervisor settings
     supervisor:
+        # Traefik host rule, defaults to the API URI host component
+        host: machine.example.com
 
         # The Supervisor image to use, defaults to ghcr.io/tschaefer/supervisor:main
         image: ghcr.io/tschaefer/supervisor:latest

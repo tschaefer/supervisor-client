@@ -63,7 +63,8 @@ module Supervisor
         end
 
         def build_labels
-          rule = "Host(\\\"#{URI.parse(@settings.api.uri).host}\\\")"
+          host = @settings.deploy&.supervisor&.host || URI.parse(@settings.api.uri).host
+          rule = "Host(\\\"#{host}\\\")"
 
           labels = {
             'traefik.enable' => 'true',
