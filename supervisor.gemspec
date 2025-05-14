@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport', '~> 8.0.0'
   spec.add_dependency 'clamp', '~> 1.3.2'
-  spec.add_dependency 'erb', '~> 4.0.3'
+  spec.add_dependency 'erb', '>= 4.0.3', '< 5.1.0'
   spec.add_dependency 'hashie', '~> 5.0'
   spec.add_dependency 'httparty', '~> 0.22'
   spec.add_dependency 'pastel', '~> 0.8.0'
