@@ -14,7 +14,7 @@ gem 'pry-rescue', '~> 1.6.0'
 gem 'pry-stack_explorer', '~> 0.6.1'
 
 # ruby make
-gem 'rake', '~> 13.2.1'
+gem 'rake', '~> 13.3.0'
 
 # testing
 gem 'rspec', '~> 3.13.0'
