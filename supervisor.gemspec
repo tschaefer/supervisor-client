@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri']       = 'https://github.com/tschaefer/supervisor-client'
   spec.metadata['bug_tracker_uri']       = 'https://github.com/tschaefer/supervisor-client/issues'
 
-  spec.add_dependency 'activesupport', '~> 8.0.0'
+  spec.add_dependency 'activesupport', '>= 8.0', '< 8.2'
   spec.add_dependency 'clamp', '~> 1.3.2'
   spec.add_dependency 'erb', '>= 4.0.3', '< 5.2.0'
   spec.add_dependency 'hashie', '~> 5.0'
