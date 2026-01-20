@@ -8,7 +8,7 @@ gemspec
 gem 'awesome_print', '~> 1.9.2'
 gem 'fiddle', '~> 1.1.2'
 gem 'ostruct', '~> 0.6.1'
-gem 'pry', '~> 0.15.2'
+gem 'pry', '~> 0.16.0'
 gem 'pry-byebug', '~> 3.12.0'
 gem 'pry-rescue', '~> 1.6.0'
 gem 'pry-stack_explorer', '~> 0.6.1'
