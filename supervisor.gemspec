@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.metadata['bug_tracker_uri']       = 'https://github.com/tschaefer/supervisor-client/issues'
 
   spec.add_dependency 'activesupport', '>= 8.0', '< 8.2'
-  spec.add_dependency 'clamp', '~> 1.3.2'
+  spec.add_dependency 'clamp', '>= 1.3.2', '< 1.5.0'
   spec.add_dependency 'erb', '>= 4.0.3', '< 6.1.0'
   spec.add_dependency 'hashie', '~> 5.0'
   spec.add_dependency 'httparty', '~> 0.22'
