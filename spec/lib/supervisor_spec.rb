@@ -195,11 +195,11 @@ RSpec.describe Supervisor do
     let(:stack_uuid) { SecureRandom.uuid }
 
     context 'when the stack is deleted' do
-      it 'returns true' do
+      it 'returns truthy' do
         stub(:delete, "/stacks/#{stack_uuid}", nil, 204)
         result = described_class.delete_stack(stack_uuid)
 
-        expect(result).to be(true)
+        expect(result).to be_truthy
       end
     end
 
@@ -218,12 +218,12 @@ RSpec.describe Supervisor do
     let(:stack_uuid) { SecureRandom.uuid }
 
     context 'when the stack is controlled' do
-      it 'returns true' do
+      it 'returns truthy' do
         body = { 'command' => 'start' }
         stub(:post, "/stacks/#{stack_uuid}/control", body, 204)
         result = described_class.control_stack(stack_uuid, body)
 
-        expect(result).to be(true)
+        expect(result).to be_truthy
       end
     end
 

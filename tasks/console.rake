@@ -21,8 +21,6 @@ def reload!(print: true)
   dirs.each do |dir|
     Dir.glob("#{ROOT}/#{dir}/**/*.rb").each { |f| silent { load(f) } }
   end
-
-  true
 end
 
 desc 'Start a console session with Hosts loaded'

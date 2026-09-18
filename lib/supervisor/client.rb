@@ -3,9 +3,12 @@
 require 'httparty'
 require 'hashie'
 
+require_relative 'patch'
+
 module Supervisor
   class Client
     include HTTParty
+
     headers 'Accept' => 'application/json', 'Content-Type' => 'application/json',
             'User-Agent' => "Supervisor/#{Supervisor::VERSION}"
     debug_output $stdout if %w[true yes 1].include?(ENV['SUPERVISOR_DEBUG'])
@@ -39,12 +42,10 @@ module Supervisor
 
     def delete_stack(stack_uuid)
       request(:delete, "/stacks/#{stack_uuid}")
-      true
     end
 
     def control_stack(stack_uuid, command)
       request(:post, "/stacks/#{stack_uuid}/control", { command: })
-      true
     end
 
     def fetch_stack_log(stack_uuid, entries = 10)

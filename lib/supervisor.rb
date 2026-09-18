@@ -21,8 +21,6 @@ module Supervisor
     def configure
       @client = Supervisor::Client.new
       yield @client
-
-      true
     end
 
     def configured?
