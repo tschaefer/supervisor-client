@@ -26,4 +26,4 @@ gem 'rubocop-rspec', '~> 3.10.2'
 gem 'webmock', '~> 3.34.0'
 
 # git
-gem 'overcommit', '~> 0.75.0'
+gem 'overcommit', '~> 0.76.0'
