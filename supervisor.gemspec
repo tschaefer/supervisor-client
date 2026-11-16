@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'clamp', '>= 1.3.2', '< 1.6.0'
   spec.add_dependency 'ed25519', '>= 1.2', '< 2.0'
   spec.add_dependency 'erb', '>= 4.0.3', '< 6.1.0'
-  spec.add_dependency 'hashie', '~> 5.0'
+  spec.add_dependency 'hashie', '>= 5', '< 7'
   spec.add_dependency 'httparty', '~> 0.22'
   spec.add_dependency 'pastel', '~> 0.8.0'
   spec.add_dependency 'sshkit', '>= 1.23.2', '< 1.26.0'
